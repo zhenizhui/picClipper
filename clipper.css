@@ -1,0 +1,104 @@
+html, body, div{
+  margin: 0;
+  padding: 0;
+}
+
+.canvas-wrapper {
+  position: relative;
+}
+.clipper-div {
+  position: absolute;
+  top: 0;
+  background: #ccc;
+  opacity: 0.5;
+}
+
+#dragDiv {
+  position: absolute;
+  border: 1px solid #666;
+  cursor: move;
+}
+
+.dot{
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid blue;
+  background-color: #fff;
+}
+
+/*lt 左上角*/
+.lt {
+  top: -4px;
+  left: -4px;
+  cursor: nw-resize;
+}
+/*tm 顶部中间*/
+.tm {
+  left: 47%;
+  top: -3px;
+  cursor: ns-resize;
+}
+/*tm 右上角*/
+.rt {
+  right: -4px;
+  top: -4px;
+  cursor: nesw-resize;
+}
+
+/*rm 右边中点*/
+.rm {
+  right: -3px;
+  bottom: 48%;
+  cursor: ew-resize;
+}
+
+/*rb 右下角*/
+.rb {
+  right: -4px;
+  bottom: -4px;
+  cursor: nwse-resize;
+}
+
+/*bm 底边中点*/
+.bm {
+  left: 46%;
+  bottom: -4px;
+  cursor: ns-resize;
+}
+
+/*bl 左下角*/
+.bl {
+  left: -4px;
+  bottom: -4px;
+  cursor: nwse-resize;
+}
+
+/*lm 左边中点*/
+.lm {
+  top: 46%;
+  left: -4px;
+  cursor: ew-resize;
+}
+/*辅助线*/
+.guide-line-1 {
+  height: 33.33%;
+  width: 100%;
+  top: 33.33%;
+  position: absolute;
+  display: inline-block;
+  border-top: 1px dotted #666;
+  border-bottom: 1px dotted #666;
+}
+/*辅助线*/
+.guide-line-2 {
+  height: 100%;
+  width: 33.33%;
+  top: 0;
+  left: 33.333%;
+  position: absolute;
+  display: inline-block;
+  border-left: 1px dotted #666;
+  border-right: 1px dotted #666;
+}

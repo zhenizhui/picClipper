@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>图片裁剪器</title>
+  <link rel="stylesheet" href="clipper.css">
+</head>
+<body>
+  <div class="canvas-wrapper">
+    <canvas id="pic-canvas"></canvas>
+    <div class="clipper-div"></div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <input type="file" accept="image/png" class="select-pic-hook">
+  <!-- style="position: relative; left: 250px;" -->
+  <p class="not-support-file-reader"></p>
+  <script>
+    var drag = false;
+    var dragDiv = document.createElement('div');
+    dragDiv.id = 'dragDiv';
+    var dragDivObj = {};
+    const clipperDiv = document.querySelector('.clipper-div');
+    clipperDiv.appendChild(dragDiv);
+    dragDiv.innerHTML = '<div id="dot-1" class="dot lt"></div><div id="dot-2" class="dot tm"></div><div id="dot-3" class="dot rt"></div><div id="dot-4" class="dot rm"></div><div id="dot-5" class="dot rb"></div>'+
+      '<div id="dot-6" class="dot bm"></div><div id="dot-7" class="dot bl"></div><div id="dot-8" class="dot lm"></div><span class="guide-line-1"></span><span class="guide-line-2"></span>';
+    dragDiv.style.display = 'none';
+    document.querySelector('.select-pic-hook').addEventListener('change', function (e) {
+      var tgt = e.target || window.event.srcElement,
+          files = tgt.files;
+      if (FileReader && files && files.length) {
+        var fr = new FileReader();
+        fr.onload = function () {
+          var canvas=document.getElementById("pic-canvas");
+          var cxt=canvas.getContext("2d");
+          var img=new Image();
+          img.src=fr.result;
+          cxt.canvas.width = img.width;
+          cxt.canvas.height = img.height;
+          cxt.drawImage(img,0, 0);
+          clipperDiv.style.width = img.width + 'px';
+          clipperDiv.style.height = img.height + 'px';
+        };
+        fr.readAsDataURL(files[0]);
+      } else {
+        document.querySelector('.not-support-file-reader').innerHTML = '当前浏览器不支持图片裁剪，请使用现代浏览器';
+      }
+    });
+
+    clipperDiv.addEventListener('mousedown', function (e) {
+      if (e.target.id === 'dragDiv') {
+        return;
+      }
+      dragDiv.style.display = 'block';
+      var reduceX = 0;
+      var reduceY = 0;
+      var temp = dragDiv.offsetParent;
+      while (temp) {
+        reduceX += temp.offsetLeft;
+        reduceY += temp.offsetTop;
+        temp = temp.offsetParent;
+      }
+      dragDivObj.startX = e.pageX;
+      dragDivObj.startY = e.pageY;
+      drag = true;
+      dragDiv.style.left = (dragDivObj.startX - reduceX)+ 'px';
+      dragDiv.style.top = (dragDivObj.startY - reduceY) + 'px';
+      dragDiv.style.background = '#fff';
+      dragDiv.style.opacity = 1;
+      if (e.target.className === 'dot rt') {
+        console.log('右上角');
+      }
+    });
+    clipperDiv.addEventListener('mousemove', function (e) {
+      if (drag) {
+        dragDiv.style.width = e.pageX - dragDivObj.startX + 'px';
+        dragDiv.style.height = e.pageY - dragDivObj.startY + 'px';
+      }
+    });
+    clipperDiv.addEventListener('mouseup', function (e) {
+      drag = false;
+    });
+  </script>
+</body>
+</html>
