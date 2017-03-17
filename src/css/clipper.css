@@ -20,8 +20,8 @@ html, body, div{
 }
 
 .dot{
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
   position: absolute;
   border-radius: 50%;
   border: 1px solid blue;
@@ -37,7 +37,7 @@ html, body, div{
 /*tm 顶部中间*/
 .tm {
   left: 47%;
-  top: -3px;
+  top: -5px;
   cursor: ns-resize;
 }
 /*tm 右上角*/
@@ -49,7 +49,7 @@ html, body, div{
 
 /*rm 右边中点*/
 .rm {
-  right: -3px;
+  right: -5px;
   bottom: 48%;
   cursor: ew-resize;
 }
@@ -57,28 +57,28 @@ html, body, div{
 /*rb 右下角*/
 .rb {
   right: -4px;
-  bottom: -4px;
+  bottom: -5px;
   cursor: nwse-resize;
 }
 
 /*bm 底边中点*/
 .bm {
   left: 46%;
-  bottom: -4px;
+  bottom: -5px;
   cursor: ns-resize;
 }
 
 /*bl 左下角*/
 .bl {
   left: -4px;
-  bottom: -4px;
+  bottom: -5px;
   cursor: nwse-resize;
 }
 
 /*lm 左边中点*/
 .lm {
   top: 46%;
-  left: -4px;
+  left: -5px;
   cursor: ew-resize;
 }
 /*辅助线*/
