@@ -1,0 +1,28 @@
+{
+  "name": "picCilpper",
+  "version": "0.0.1",
+  "description": "cut you picture",
+  "main": "clipper.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhenizhui/picClipper"
+  },
+  "keywords": [
+    "picture",
+    "picClipper"
+  ],
+  "author": "zhenizhui",
+  "license": "MIT",
+  "homepage": "https://zhenizhui.github.io/picClipper",
+  "bugs": {
+    "url": "https://github.com/zhenizhui/picClipper/issues"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.0.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.1.0"
+  }
+}
