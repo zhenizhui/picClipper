@@ -3,6 +3,10 @@ html, body, div{
   padding: 0;
 }
 
+.display {
+  position: relative;
+}
+
 .canvas-wrapper {
   position: relative;
 }

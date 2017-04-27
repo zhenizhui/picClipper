@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>图片裁剪器</title>
-  <link rel="stylesheet" href="clipper.css">
+  <link rel="stylesheet" href="dist/clipper.css">
 </head>
 <body>
-  <div class="display">
-  </div>
+  <div class="display"></div>
   <input type="file" accept="image/png" class="select-pic-hook">
-  <script src="clipper.js"></script>
+  <button id="new-pic-btn">生成截图</button>
+  <script src="dist/clipper.js"></script>
   <script>
     var c = new Clipper({
-      el: '.select-pic-hook',
+      fileInputEl: '.select-pic-hook',
       displayEl: '.display'
     });
     c.init();
+    var btn = document.querySelector('#new-pic-btn');
+    btn.addEventListener('click', function () {
+      c.saveToNewImg();
+    })
   </script>
 </body>
 </html>

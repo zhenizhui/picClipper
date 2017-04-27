@@ -1,12 +1,23 @@
 (function () {
   function dragable(el, config) {
+    // 拖拽元素
     this.el = el;
-    this.config = config;
+    // 此刻是否拖动
     this.isDrag = false;
-    this.containerEl = this.config.container;
-    this.offset = {x: 0, y: 0};
+    // 有无父元素，有的话则限制在父元素内部活动
+    this.containerEl = config.container;
+    // 如果限制在父元素里面的话，纪录限制的范围
+    this._max = {};
+    //记录鼠标相对拖放对象的横坐标
+    this._x = 0;
+    //记录鼠标相对拖放对象的纵坐标
+    this._y = 0;
+    // 纪录marginLeft
+    this._marginLeft = 0;
+    // 纪录marginTop
+    this._marginTop = 0;
+    // 初始化
     this.init();
-    this.bindEvent();
   }
 
   var proto = dragable.prototype = Object.create(EventEmitter.prototype);
@@ -19,46 +30,58 @@
   };
 
   proto.init = function () {
-    var positionStyle = this.getStyle('position');
+    var positionStyle = getComputedStyle(this.el).getPropertyValue('margin-left');
     if (positionStyle === 'static' || positionStyle === 'fixed') {
       this.el.style.position = 'relative';
     }
-  };
+    this.el.addEventListener('mousedown', this);
 
-  /**
-   * @description get element's style by style name
-   * @param styleName
-   * @return {string}
-   */
-  proto.getStyle = function (styleName, flag) {
-    var str = getComputedStyle(this.el).getPropertyValue(styleName);
-    return flag ? parseInt(str.slice(0, -2)) : str;
   };
 
   /**
    * @description bind native event
    */
   proto.bindEvent = function () {
-    var eventList = ['mousedown', 'mousemove', 'mouseup'];
+    var eventList = ['mousemove', 'mouseup'];
 
     eventList.forEach(function (eventName) {
-      this.el.addEventListener(eventName, this);
+      document.addEventListener(eventName, this);
     }, this);
+
+    this._boundPointerEvents = eventList;
   };
 
+  proto.unbindEvent = function() {
+    if ( !this._boundPointerEvents ) {
+      return;
+    }
+    this._boundPointerEvents.forEach( function( eventName ) {
+      document.removeEventListener( eventName, this );
+    }, this );
+
+    delete this._boundPointerEvents;
+  };
   /**** native event ↓ ****/
 
   proto.onmousedown = function (event) {
+    // 防止冒泡到clipperdiv
     event.stopPropagation();
-    this.dragStar(event);
+    console.log('%c drag', 'background: #222; color: #bada55', 'mousedown');
+    if (event.target == this.el) {
+      this.bindEvent();
+      this.dragStar(event);
+    } else {
+      return;
+    }
   };
 
   proto.onmousemove = function (event) {
-    event.stopPropagation();
+    //console.log('%c drag', 'background: #222; color: #bada55', 'mousemove');
     this.dragMove(event);
   };
 
   proto.onmouseup = function (event) {
+    //console.log('%c drag', 'background: #222; color: #bada55', 'mouseup');
     this.dragEnd(event);
   };
 
@@ -68,17 +91,16 @@
 
   proto.dragStar = function (event) {
     this.isDrag = true;
-    this.offset.x = event.clientX - this.el.offsetLeft;
-    this.offset.y = event.clientY - this.el.offsetTop;
-    //this.offset.x =this.el.offsetLeft;
-    //this.offset.y =this.el.offsetTop;
-    this.dragStartPos = {x: event.clientX, y: event.clientY};
+    this._x = event.clientX - this.el.offsetLeft;
+    this._y = event.clientY - this.el.offsetTop;
+    //this._marginLeft = parseInt(getComputedStyle(this.containerEl).getPropertyValue('margin-left'));
+    //this._marginTop = parseInt(getComputedStyle(this.containerEl).getPropertyValue('margin-top'));
   };
 
   proto.dragMove = function (event) {
     if (this.isDrag) {
-      var left = event.clientX - this.offset.x;
-      var top = event.clientY - this.offset.y;
+      var left = event.clientX - this._x;
+      var top = event.clientY - this._y;
       if (this.containerEl) {
         var containerBoundingLeft = this.containerEl.getBoundingClientRect().left;
         var containerBoundingTop = this.containerEl.getBoundingClientRect().top;
@@ -87,12 +109,13 @@
         var elBoundingWidth = this.el.getBoundingClientRect().width;
         var elBoundingHeight = this.el.getBoundingClientRect().height;
         var displayEl = document.querySelector('.display');
-        var containerLeft = displayEl.style.left == "" ? 0 : parseInt(displayEl.style.left.slice(0, -2));
+        var containerLeft = displayEl.style.left == "" ? 0 : parseInt(displayEl.style.left);
         var c1 = left + containerLeft >= containerBoundingLeft;
         var c2 = left + elBoundingWidth <= containerBoundingWidth;
         //var c2 = left + elBoundingWidth <= containerBoundingLeft;
         var c3 = top >= containerBoundingTop;
         var c4 = top + elBoundingHeight <= containerBoundingTop + containerBoundingHeight;
+        console.log('c1= ' + c1+'c2= ' + c2+'c3= ' + c3+'c4= ' + c4);
         var moveCondition = c1 && c2 && c3 && c4;
         if (moveCondition) {
           this.el.style.left = left + 'px';
@@ -105,8 +128,9 @@
     }
   };
 
-  proto.dragEnd = function (event) {
+  proto.dragEnd = function () {
     this.isDrag = false;
+    this.unbindEvent();
   };
 
   /**** drag event ↑ ****/
