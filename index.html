@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>图片裁剪器</title>
+  <link rel="stylesheet" href="resource/clipper.css">
+</head>
+<body>
+  <div class="display"></div>
+  <input type="file" accept="image/png" class="select-pic-hook">
+  <button id="new-pic-btn">生成截图</button>
+  <script src="resource/clipper.js"></script>
+  <script>
+    var c = new Clipper({
+      fileInputEl: '.select-pic-hook',
+      displayEl: '.display'
+    });
+    c.init();
+    var btn = document.querySelector('#new-pic-btn');
+    btn.addEventListener('click', function () {
+      c.saveToNewImg();
+    })
+  </script>
+</body>
+</html>
